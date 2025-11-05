@@ -1,14 +1,5 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Product, SalesHistory, PredictionResult } from '../types';
-
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 const responseSchema = {
   type: Type.ARRAY,
@@ -50,6 +41,14 @@ const responseSchema = {
 };
 
 export const getInventoryPredictions = async (products: Product[], salesHistory: SalesHistory[]): Promise<PredictionResult[]> => {
+  const API_KEY = process.env.API_KEY;
+
+  if (!API_KEY) {
+    throw new Error("API_KEY environment variable not set. Please configure it in your environment.");
+  }
+  
+  const ai = new GoogleGenAI({ apiKey: API_KEY });
+
   const prompt = `
     You are an expert inventory management analyst. Your task is to analyze product data and historical sales to forecast future demand and provide actionable restocking recommendations.
 
