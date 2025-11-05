@@ -1,51 +1,52 @@
-import { GoogleGenAI, Type } from "@google/genai";
 import type { Product, SalesHistory, PredictionResult } from '../types';
 
-const responseSchema = {
-  type: Type.ARRAY,
-  items: {
-    type: Type.OBJECT,
-    properties: {
-      productId: {
-        type: Type.STRING,
-        description: 'The unique identifier for the product.'
-      },
-      forecastedDemand: {
-        type: Type.ARRAY,
-        description: 'An array of 4 integers representing the predicted sales demand for the next 4 weeks.',
-        items: {
-          type: Type.INTEGER
-        },
-      },
-      restockRecommendation: {
-        type: Type.OBJECT,
-        properties: {
-          shouldRestock: {
-            type: Type.BOOLEAN,
-            description: 'True if a restock is recommended, otherwise false.'
-          },
-          quantity: {
-            type: Type.INTEGER,
-            description: 'The suggested quantity to reorder to cover forecasted demand and reach a safe stock level. 0 if no restock is needed.'
-          },
-          reason: {
-            type: Type.STRING,
-            description: 'A brief, clear explanation for the restock recommendation decision.'
-          },
-        },
-        required: ['shouldRestock', 'quantity', 'reason']
-      },
-    },
-    required: ['productId', 'forecastedDemand', 'restockRecommendation']
-  },
-};
-
 export const getInventoryPredictions = async (products: Product[], salesHistory: SalesHistory[]): Promise<PredictionResult[]> => {
+  const { GoogleGenAI, Type } = await import('@google/genai');
+  
   const API_KEY = process.env.API_KEY;
 
   if (!API_KEY) {
     throw new Error("API_KEY environment variable not set. Please configure it in your environment.");
   }
+  
+  const responseSchema = {
+    type: Type.ARRAY,
+    items: {
+      type: Type.OBJECT,
+      properties: {
+        productId: {
+          type: Type.STRING,
+          description: 'The unique identifier for the product.'
+        },
+        forecastedDemand: {
+          type: Type.ARRAY,
+          description: 'An array of 4 integers representing the predicted sales demand for the next 4 weeks.',
+          items: {
+            type: Type.INTEGER
+          },
+        },
+        restockRecommendation: {
+          type: Type.OBJECT,
+          properties: {
+            shouldRestock: {
+              type: Type.BOOLEAN,
+              description: 'True if a restock is recommended, otherwise false.'
+            },
+            quantity: {
+              type: Type.INTEGER,
+              description: 'The suggested quantity to reorder to cover forecasted demand and reach a safe stock level. 0 if no restock is needed.'
+            },
+            reason: {
+              type: Type.STRING,
+              description: 'A brief, clear explanation for the restock recommendation decision.'
+            },
+          },
+          required: ['shouldRestock', 'quantity', 'reason']
+        },
+      },
+      required: ['productId', 'forecastedDemand', 'restockRecommendation']
+    },
+  };
   
   const ai = new GoogleGenAI({ apiKey: API_KEY });
 
