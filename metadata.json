@@ -1,0 +1,5 @@
+{
+  "name": "Predictive Inventory Control",
+  "description": "An intelligent inventory management system that uses Gemini to analyze historical sales data, forecast future demand, and provide smart restocking recommendations to prevent stockouts and optimize stock levels.",
+  "requestFramePermissions": []
+}
